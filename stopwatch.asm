@@ -1,74 +1,68 @@
-ORG 0H
+# Projeto 1 - Cronômetro Digital usando Assembly e 8051
 
-; Configura P2 como entrada
-MOV P2, #0FFH           ; O valor 0xFF configura todos os pinos de P2 como entrada
+## Disciplina: SEL0614/SEL0433 - Aplicação de Microprocessadores  
+### Parte 1 - Sistemas Embarcados e Microcontroladores
 
-MOV R0, #00H            ; Contador começando em 0
+## 1. Resumo
+Este projeto consiste no desenvolvimento de um cronômetro digital em linguagem Assembly para o microcontrolador 8051, utilizando o simulador EdSim51. O cronômetro exibe números de 0 a 9 em um display de 7 segmentos, alternando entre intervalos de tempo de 0,25 segundos e 1 segundo, controlados por dois botões (SW0 e SW1). A simulação inclui o uso de registradores, portas de entrada e saída, e sub-rotinas de delay.
 
-INIT: 
-    ; Verifica se P2.0 ou P2.1 estão pressionados
-    JNB P2.0, MAIN_LOOP ; Se P2.0 não estiver pressionado, pula para MAIN_LOOP
-    JNB P2.1, MAIN_LOOP ; Se P2.1 não estiver pressionado, pula para MAIN_LOOP
-    JMP INIT            ; Caso contrário, repete o loop inicial
+## 2. Objetivos
+O objetivo deste projeto é explorar o funcionamento de sistemas embarcados e microcontroladores, especificamente o 8051, através da implementação de um cronômetro digital que utilize botões e display de 7 segmentos. Além disso, o projeto busca desenvolver habilidades na programação em Assembly e no uso de sub-rotinas de tempo.
 
-MAIN_LOOP:
-    MOV A, R0                   ; Move o valor do contador para o acumulador
-    MOV DPTR, #SEG_TABLE        ; Carrega o endereço da tabela de segmentos
-    MOVC A, @A+DPTR             ; Acessa a tabela usando DPTR
-    MOV P1, A                   ; Envia a saída para o display de 7 segmentos
-    
-    ; Verifica qual botão foi pressionado para definir o tempo de delay
-    MOV A, P2                   ; Lê novamente o estado de P2
-    ANL A, #03H                 ; Aplica máscara para verificar P2.0 e P2.1
-    CJNE A, #01H, CHECK_P2_1    ; Se P2.0 estiver pressionado (A == 01H), delay de 1s
-    ACALL DELAY_1S              ; Chama rotina de delay de 1 segundo
-    SJMP CONTINUE               ; Salta para continuar o loop
+### Específicos:
+- Criar um cronômetro digital que conte de 0 a 9 em um display de 7 segmentos.
+- Alternar o tempo de contagem entre 0,25 segundos e 1 segundo utilizando botões.
+- Utilizar registradores, portas de entrada e saída, e sub-rotinas de delay para implementar o sistema.
 
-CHECK_P2_1:
-    ACALL DELAY_0_25S           ; Se P2.1 estiver pressionado, chama delay de 0,25s
+## 3. Materiais e Métodos
+### Materiais:
+- **Microcontrolador**: 8051 (simulado no EdSim51).
+- **Simulador**: EdSim51.
+- **Linguagem de programação**: Assembly.
 
-CONTINUE:
-    INC R0                      ; Incrementa o contador
-    CJNE R0, #0AH, INIT         ; Se R0 < 10, continua no loop
+### Métodos:
+O projeto foi desenvolvido no simulador EdSim51 utilizando os seguintes componentes:
+- **Botões SW0 e SW1**: Utilizados para controlar o intervalo de tempo da contagem.
+- **Display de 7 segmentos**: Mostra os números de 0 a 9.
+- **Registradores GPR e SFR**: Utilizados para controle da contagem, verificação de eventos e configuração das portas de entrada e saída.
+- **Sub-rotinas de delay**: Implementadas para gerar os atrasos de 0,25 segundos e 1 segundo.
 
-    MOV R0, #00H                ; Reseta o contador após alcançar 9
-    SJMP INIT                   ; Volta para o início
+## 4. Descrição
+### Inicialização:
+- A porta P2 é configurada como entrada para detectar os botões SW0 e SW1.
+- O display de 7 segmentos está conectado à porta P1, que exibe os números de 0 a 9.
 
-; Rotina de Delay de 1 segundo
-DELAY_1S:                       
-    MOV R1, #255                ; Configura R1 para um valor alto
-DELAY_1S_LOOP1:
-    MOV R2, #255                ; Configura R2 para um valor alto
-DELAY_1S_LOOP2:
-    NOP                         ; Instrução sem operação
-    NOP                         ; Dois NOPs para aumentar o tempo de delay
-    DJNZ R2, DELAY_1S_LOOP2     ; Decrementa R2 e repete se não for zero
-    DJNZ R1, DELAY_1S_LOOP1     ; Decrementa R1 e repete se não for zero
-    RET                         ; Retorna da rotina de delay
+### Funcionamento:
+1. O programa inicia com o display desligado. A contagem só começa quando SW0 ou SW1 são pressionados.
+2. **SW0**: Ao pressionar SW0, o cronômetro conta de 0 a 9 com um intervalo de 0,25 segundos.
+3. **SW1**: Ao pressionar SW1, o intervalo de contagem é alterado para 1 segundo.
+4. **Loop**: A contagem é contínua, alternando entre os intervalos de tempo conforme o botão pressionado.
 
-; Rotina de Delay de 0,25 segundos
-DELAY_0_25S:                   
-    MOV R1, #63                 ; Configura R1 para um valor menor (aproximadamente 0,25s)
-DELAY_0_25S_LOOP1:
-    MOV R2, #255                ; Configura R2 para um valor alto
-DELAY_0_25S_LOOP2:
-    NOP                         ; Instrução sem operação
-    NOP                         ; Dois NOPs para aumentar o tempo de delay
-    DJNZ R2, DELAY_0_25S_LOOP2  ; Decrementa R2 e repete se não for zero
-    DJNZ R1, DELAY_0_25S_LOOP1  ; Decrementa R1 e repete se não for zero
-    RET                         ; Retorna da rotina de delay
+### Sub-rotinas de Delay:
+- **DELAY_0_25S**: Atraso de 0,25 segundos.
+- **DELAY_1S**: Atraso de 1 segundo.
 
-; Tabela de segmentos para display de 7 segmentos
-SEG_TABLE:
-    DB 0C0H    ; 0
-    DB 0F9H    ; 1
-    DB 0A4H    ; 2
-    DB 0B0H    ; 3
-    DB 99H     ; 4
-    DB 92H     ; 5
-    DB 82H     ; 6
-    DB 0F8H    ; 7
-    DB 80H     ; 8
-    DB 90H     ; 9
+### Tabela de Segmentos:
+O display de 7 segmentos utiliza uma tabela de valores para representar os números de 0 a 9. A porta P1 é responsável por controlar o display com base nos valores armazenados na tabela.
 
-END
+## 5. Resultados e Discussão
+O projeto foi implementado com sucesso no simulador EdSim51, cumprindo os seguintes requisitos:
+- **Contagem correta de 0 a 9**: O display de 7 segmentos exibe os números na ordem correta e a contagem reinicia ao chegar a 9.
+- **Alteração de intervalo de tempo**: O cronômetro altera a base de tempo corretamente entre 0,25 segundos e 1 segundo ao pressionar SW0 e SW1.
+- **Loop contínuo**: A contagem ocorre indefinidamente até que a simulação seja parada.
+
+### Exemplos do Funcionamento:
+Aqui estão dois GIFs demonstrando o funcionamento do cronômetro:
+
+1. Contagem com intervalo de 0,25 segundos:
+   
+   ![GIF Contagem 0,25s](delay025s.gif)
+
+2. Contagem com intervalo de 1 segundo:
+   
+   ![GIF Contagem 1s](dalay1s.gif)
+
+Discussão: A implementação do cronômetro evidenciou a importância do uso de sub-rotinas para gerar os diferentes atrasos temporais. O controle via botões foi eficaz, demonstrando a capacidade do microcontrolador 8051 de gerenciar múltiplos eventos simultâneos com precisão.
+
+## 6. Conclusão
+O desenvolvimento deste projeto permitiu aplicar conceitos importantes de sistemas embarcados e microcontroladores, como o uso de registradores, portas de entrada/saída, e sub-rotinas de tempo. A implementação no EdSim51 demonstrou o funcionamento correto do cronômetro digital, alcançando os objetivos propostos. Este projeto reforçou o entendimento sobre a programação em Assembly e o uso prático do microcontrolador 8051 para controle de eventos e interfaces externas.
