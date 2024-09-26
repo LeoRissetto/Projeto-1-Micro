@@ -51,6 +51,17 @@ O projeto foi implementado com sucesso no simulador EdSim51, cumprindo os seguin
 - **Alteração de intervalo de tempo**: O cronômetro altera a base de tempo corretamente entre 0,25 segundos e 1 segundo ao pressionar SW0 e SW1.
 - **Loop contínuo**: A contagem ocorre indefinidamente até que a simulação seja parada.
 
+### Exemplos do Funcionamento:
+Aqui estão dois GIFs demonstrando o funcionamento do cronômetro:
+
+1. Contagem com intervalo de 0,25 segundos:
+   
+   ![GIF Contagem 0,25s](caminho/para/seu_gif1.gif)
+
+2. Contagem com intervalo de 1 segundo:
+   
+   ![GIF Contagem 1s](caminho/para/seu_gif2.gif)
+
 Discussão: A implementação do cronômetro evidenciou a importância do uso de sub-rotinas para gerar os diferentes atrasos temporais. O controle via botões foi eficaz, demonstrando a capacidade do microcontrolador 8051 de gerenciar múltiplos eventos simultâneos com precisão.
 
 ## 6. Conclusão
