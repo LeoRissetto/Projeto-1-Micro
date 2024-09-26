@@ -56,11 +56,11 @@ Aqui estão dois GIFs demonstrando o funcionamento do cronômetro:
 
 1. Contagem com intervalo de 0,25 segundos:
    
-   <img src="delay025s.gif" width="300px">
+   <img src="delay025s.gif" width="400px">
 
 2. Contagem com intervalo de 1 segundo:
    
-   <img src="delay1s.gif" width="300px">
+   <img src="delay1s.gif" width="400px">
 
 Discussão: A implementação do cronômetro evidenciou a importância do uso de sub-rotinas para gerar os diferentes atrasos temporais. O controle via botões foi eficaz, demonstrando a capacidade do microcontrolador 8051 de gerenciar múltiplos eventos simultâneos com precisão.
 
