@@ -64,5 +64,24 @@ Aqui estão dois GIFs demonstrando o funcionamento do cronômetro:
 
 Discussão: A implementação do cronômetro evidenciou a importância do uso de sub-rotinas para gerar os diferentes atrasos temporais. O controle via botões foi eficaz, demonstrando a capacidade do microcontrolador 8051 de gerenciar múltiplos eventos simultâneos com precisão.
 
-## 6. Conclusão
+## 6. Como executar o código
+
+Para executar o projeto e ver o cronômetro em ação, siga os passos abaixo:
+
+### Instalação do EdSim51:
+1. Faça o download do simulador EdSim51.
+2. Instale o programa seguindo as instruções na tela.
+
+### Executando o Código:
+1. Abra o EdSim51 e vá até **File > Open** e selecione o arquivo `.asm` do projeto.
+2. Uma vez carregado, você verá o código Assembly no editor de texto do simulador.
+
+### Simulação:
+1. Clique no botão **Run** para iniciar a simulação.
+2. Utilize os botões (SW0 e SW1) no simulador para controlar o cronômetro conforme descrito anteriormente.
+
+### Encerrando a Simulação:
+Para parar a simulação, clique no botão **Stop**.
+
+## 7. Conclusão
 O desenvolvimento deste projeto permitiu aplicar conceitos importantes de sistemas embarcados e microcontroladores, como o uso de registradores, portas de entrada/saída, e sub-rotinas de tempo. A implementação no EdSim51 demonstrou o funcionamento correto do cronômetro digital, alcançando os objetivos propostos. Este projeto reforçou o entendimento sobre a programação em Assembly e o uso prático do microcontrolador 8051 para controle de eventos e interfaces externas.
