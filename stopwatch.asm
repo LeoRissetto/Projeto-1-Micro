@@ -3,6 +3,8 @@ ORG 0H
 ; Configura P2 como entrada
 MOV P2, #0FFH           ; O valor 0xFF configura todos os pinos de P2 como entrada
 
+MOV DPTR, #SEG_TABLE        ; Carrega o endereço da tabela de segmentos
+
 MOV R0, #00H            ; Contador começando em 0
 
 INIT: 
@@ -13,7 +15,6 @@ INIT:
 
 MAIN_LOOP:
     MOV A, R0                   ; Move o valor do contador para o acumulador
-    MOV DPTR, #SEG_TABLE        ; Carrega o endereço da tabela de segmentos
     MOVC A, @A+DPTR             ; Acessa a tabela usando DPTR
     MOV P1, A                   ; Envia a saída para o display de 7 segmentos
     
