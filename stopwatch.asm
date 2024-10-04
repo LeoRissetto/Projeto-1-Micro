@@ -3,7 +3,7 @@ ORG 0H
 ; Configura P2 como entrada
 MOV P2, #0FFH           ; O valor 0xFF configura todos os pinos de P2 como entrada
 
-MOV DPTR, #SEG_TABLE        ; Carrega o endereço da tabela de segmentos
+MOV DPTR, #SEG_TABLE    ; Carrega o endereço da tabela de segmentos
 
 MOV R0, #00H            ; Contador começando em 0
 
