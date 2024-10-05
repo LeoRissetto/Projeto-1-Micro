@@ -28,7 +28,7 @@ CONTINUE:
     JMP INIT                ; Volta para o início do loop
 
 DELAY_1S:
-    MOV R1, #10             ; Inicializa o contador R1 para o delay de 1 segundo
+    MOV R1, #20             ; Inicializa o contador R1 para o delay de 1 segundo
 DELAY_1S_LOOP1:
     MOV R2, #100            ; Inicializa o contador R3
 DELAY_1S_LOOP2:
@@ -39,9 +39,9 @@ DELAY_1S_LOOP2:
     JMP CONTINUE            ; Após o delay, volta para CONTINUE
 
 DELAY_0_25S:
-    MOV R1, #1              ; Inicializa o contador R1 para o delay de 0,25 segundos
+    MOV R1, #5              ; Inicializa o contador R1 para o delay de 0,25 segundos
 DELAY_0_25S_LOOP1:
-    MOV R2, #250            ; Inicializa o contador R3
+    MOV R2, #100            ; Inicializa o contador R3
 DELAY_0_25S_LOOP2:
     MOV R3, #250            ; Inicializa o contador R2 para o delay interno
     DJNZ R3, $              ; Decrementa R2 e repete até chegar a 0
