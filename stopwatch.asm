@@ -1,65 +1,55 @@
-ORG 0H
+ORG 0000h              ; Define o endereço inicial do programa
 
-; Configura P2 como entrada
-MOV P2, #0FFH           ; O valor 0xFF configura todos os pinos de P2 como entrada
+MOV DPTR, #SEG_TABLE   ; Carrega o endereço da tabela de segmentos no registrador DPTR
 
-MOV DPTR, #SEG_TABLE    ; Carrega o endereço da tabela de segmentos
+ORG 0033h              ; Define o endereço de início da execução do programa
 
-MOV R0, #00H            ; Contador começando em 0
+MOV R0, #00H           ; Inicializa o contador R0 em 0
 
 INIT: 
-    ; Verifica se P2.0 ou P2.1 estão pressionados
-    JNB P2.0, MAIN_LOOP ; Se P2.0 não estiver pressionado, pula para MAIN_LOOP
-    JNB P2.1, MAIN_LOOP ; Se P2.1 não estiver pressionado, pula para MAIN_LOOP
-    JMP INIT            ; Caso contrário, repete o loop inicial
+    ; Verifica se os botões P2.0 ou P2.1 estão pressionados
+    JNB P2.0, MAIN_LOOP     ; Se P2.0 estiver pressionado, salta para MAIN_LOOP
+    JNB P2.1, MAIN_LOOP     ; Se P2.1 estiver pressionado, salta para MAIN_LOOP
+    JMP INIT                ; Se ambos os botões estiverem pressionados, repete o loop INIT
 
 MAIN_LOOP:
-    MOV A, R0                   ; Move o valor do contador para o acumulador
-    MOVC A, @A+DPTR             ; Acessa a tabela usando DPTR
-    MOV P1, A                   ; Envia a saída para o display de 7 segmentos
-    
-    ; Verifica qual botão foi pressionado para definir o tempo de delay
-    MOV A, P2                   ; Lê novamente o estado de P2
-    ANL A, #03H                 ; Aplica máscara para verificar P2.0 e P2.1
-    CJNE A, #01H, CHECK_P2_1    ; Se P2.0 estiver pressionado (A == 01H), delay de 1s
-    ACALL DELAY_1S              ; Chama rotina de delay de 1 segundo
-    SJMP CONTINUE               ; Salta para continuar o loop
+    MOV A, R0              ; Move o valor do contador (R0) para o acumulador (A)
+    MOVC A, @A + DPTR     ; Acessa a tabela de segmentos usando o valor em A como índice
+    MOV P1, A              ; Envia o valor do acumulador para o display de 7 segmentos (P1)
 
-CHECK_P2_1:
-    ACALL DELAY_0_25S           ; Se P2.1 estiver pressionado, chama delay de 0,25s
+    ; Verifica qual botão foi pressionado para definir o tempo de delay
+    JNB P2.0, DELAY_0_25S   ; Se P2.0 estiver pressionado, salta para DELAY_0_25S
+    JMP DELAY_1S           ; Caso contrário, salta para DELAY_1S
 
 CONTINUE:
-    INC R0                      ; Incrementa o contador
-    CJNE R0, #0AH, INIT         ; Se R0 < 10, continua no loop
+    INC R0                  ; Incrementa o contador R0
+    CJNE R0, #0AH, INIT     ; Se R0 for menor que 10, volta para INIT
+    MOV R0, #00H            ; Reseta o contador R0 para 0 após atingir 9
+    JMP INIT                ; Volta para o início do loop
 
-    MOV R0, #00H                ; Reseta o contador após alcançar 9
-    SJMP INIT                   ; Volta para o início
-
-; Rotina de Delay de 1 segundo
-DELAY_1S:                       
-    MOV R1, #255                ; Configura R1 para um valor alto
+DELAY_1S:
+    MOV R1, #10             ; Inicializa o contador R1 para o delay de 1 segundo
 DELAY_1S_LOOP1:
-    MOV R2, #255                ; Configura R2 para um valor alto
+    MOV R2, #100            ; Inicializa o contador R3
 DELAY_1S_LOOP2:
-    NOP                         ; Instrução sem operação
-    NOP                         ; Dois NOPs para aumentar o tempo de delay
-    DJNZ R2, DELAY_1S_LOOP2     ; Decrementa R2 e repete se não for zero
-    DJNZ R1, DELAY_1S_LOOP1     ; Decrementa R1 e repete se não for zero
-    RET                         ; Retorna da rotina de delay
+    MOV R3, #250            ; Inicializa o contador R2 para o delay interno
+    DJNZ R3, $              ; Decrementa R2 e repete até chegar a 0
+    DJNZ R2, DELAY_1S_LOOP2 ; Decrementa R3 e repete até chegar a 0
+    DJNZ R1, DELAY_1S_LOOP1 ; Decrementa R1 e repete até chegar a 0
+    JMP CONTINUE            ; Após o delay, volta para CONTINUE
 
-; Rotina de Delay de 0,25 segundos
-DELAY_0_25S:                   
-    MOV R1, #63                 ; Configura R1 para um valor menor (aproximadamente 0,25s)
+DELAY_0_25S:
+    MOV R1, #1              ; Inicializa o contador R1 para o delay de 0,25 segundos
 DELAY_0_25S_LOOP1:
-    MOV R2, #255                ; Configura R2 para um valor alto
+    MOV R2, #250            ; Inicializa o contador R3
 DELAY_0_25S_LOOP2:
-    NOP                         ; Instrução sem operação
-    NOP                         ; Dois NOPs para aumentar o tempo de delay
-    DJNZ R2, DELAY_0_25S_LOOP2  ; Decrementa R2 e repete se não for zero
-    DJNZ R1, DELAY_0_25S_LOOP1  ; Decrementa R1 e repete se não for zero
-    RET                         ; Retorna da rotina de delay
+    MOV R3, #250            ; Inicializa o contador R2 para o delay interno
+    DJNZ R3, $              ; Decrementa R2 e repete até chegar a 0
+    DJNZ R2, DELAY_0_25S_LOOP2 ; Decrementa R3 e repete até chegar a 0
+    DJNZ R1, DELAY_0_25S_LOOP1 ; Decrementa R1 e repete até chegar a 0
+    JMP CONTINUE            ; Após o delay, volta para CONTINUE
 
-; Tabela de segmentos para display de 7 segmentos
+; Tabela de segmentos para o display de 7 segmentos
 SEG_TABLE:
     DB 0C0H    ; 0
     DB 0F9H    ; 1
@@ -72,4 +62,4 @@ SEG_TABLE:
     DB 80H     ; 8
     DB 90H     ; 9
 
-END
+END                     ; Finaliza o programa
