@@ -1,7 +1,12 @@
 # Projeto 1 - Cronômetro Digital usando Assembly e 8051
 
-## Disciplina: SEL0614/SEL0433 - Aplicação de Microprocessadores  
+## Disciplina: SEL0614/SEL0433 - Aplicação de Microprocessadores 
 ### Parte 1 - Sistemas Embarcados e Microcontroladores
+
+## Membros do Grupo
+
+- Leonardo Gueno Rissetto (13676482)
+- Thiago Kashivagui Gonçalves (13676579)
 
 ## 1. Resumo
 Este projeto consiste no desenvolvimento de um cronômetro digital em linguagem Assembly para o microcontrolador 8051, utilizando o simulador EdSim51. O cronômetro exibe números de 0 a 9 em um display de 7 segmentos, alternando entre intervalos de tempo de 0,25 segundos e 1 segundo, controlados por dois botões (SW0 e SW1). A simulação inclui o uso de registradores, portas de entrada e saída, e sub-rotinas de delay.
